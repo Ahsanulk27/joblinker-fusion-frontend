@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
@@ -33,24 +32,24 @@ const mockJob = {
       <li>Stay up-to-date with emerging trends and best practices in frontend development</li>
     </ul>`,
   requirements: [
-    'Bachelor's degree in Computer Science or related field (or equivalent experience)',
-    '5+ years of experience in frontend development',
-    'Strong proficiency in JavaScript, including DOM manipulation and the JavaScript object model',
-    'Experience with React.js and its core principles',
-    'Experience with popular React workflows (Redux, Hooks, etc)',
-    'Familiarity with newer specifications of ECMAScript',
-    'Experience with data structure libraries (e.g., Immutable.js)',
-    'Knowledge of isomorphic React is a plus',
-    'Understanding of REST APIs and asynchronous request handling',
+    "Bachelor's degree in Computer Science or related field (or equivalent experience)",
+    "5+ years of experience in frontend development",
+    "Strong proficiency in JavaScript, including DOM manipulation and the JavaScript object model",
+    "Experience with React.js and its core principles",
+    "Experience with popular React workflows (Redux, Hooks, etc)",
+    "Familiarity with newer specifications of ECMAScript",
+    "Experience with data structure libraries (e.g., Immutable.js)",
+    "Knowledge of isomorphic React is a plus",
+    "Understanding of REST APIs and asynchronous request handling",
   ],
   benefits: [
-    'Competitive salary with annual bonuses',
-    'Comprehensive health, dental, and vision insurance',
-    'Flexible work arrangements, including remote options',
-    '401(k) with company match',
-    'Generous PTO policy and paid holidays',
-    'Professional development budget',
-    'Modern office with catered lunches and snacks',
+    "Competitive salary with annual bonuses",
+    "Comprehensive health, dental, and vision insurance",
+    "Flexible work arrangements, including remote options",
+    "401(k) with company match",
+    "Generous PTO policy and paid holidays",
+    "Professional development budget",
+    "Modern office with catered lunches and snacks",
   ],
   skills: ['React', 'TypeScript', 'JavaScript', 'HTML', 'CSS', 'Redux', 'REST APIs', 'Git'],
   logo: '🌐',
