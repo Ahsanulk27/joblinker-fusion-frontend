@@ -1,12 +1,20 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { AnimatedElement } from '@/components/AnimatedElement';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, Users, Search, Zap, Award, Rocket, ChevronRight, BarChart } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { PostJobForm } from '@/components/PostJobForm';
 
 const Employers = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const openJobPostingDialog = () => {
+    setIsDialogOpen(true);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -22,7 +30,10 @@ const Employers = () => {
                   Connect with qualified candidates, streamline your hiring process, and build your dream team with JobLinker's powerful recruitment tools.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button className="bg-white hover:bg-white/90 text-brand-red h-12 px-6 text-lg">
+                  <Button 
+                    className="bg-white hover:bg-white/90 text-brand-red h-12 px-6 text-lg"
+                    onClick={openJobPostingDialog}
+                  >
                     Post a Job
                   </Button>
                   <Button variant="outline" className="border-white text-white hover:bg-white/10 h-12 px-6 text-lg">
@@ -30,6 +41,19 @@ const Employers = () => {
                   </Button>
                 </div>
               </AnimatedElement>
+              
+              {/* Job posting dialog */}
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl">Post a New Job</DialogTitle>
+                    <DialogDescription>
+                      Fill out the form below to create a new job listing. Fields marked with * are required.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <PostJobForm onSuccess={() => setIsDialogOpen(false)} />
+                </DialogContent>
+              </Dialog>
               
               <AnimatedElement delay={200}>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 lg:p-8">
@@ -284,7 +308,10 @@ const Employers = () => {
                 Join thousands of companies that trust JobLinker to find their ideal candidates.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button className="bg-white hover:bg-white/90 text-brand-red h-12 px-8 text-lg">
+                <Button 
+                  className="bg-white hover:bg-white/90 text-brand-red h-12 px-8 text-lg"
+                  onClick={openJobPostingDialog}
+                >
                   Post a Job
                 </Button>
                 <Button variant="outline" className="border-white text-white hover:bg-white/10 h-12 px-8 text-lg">
