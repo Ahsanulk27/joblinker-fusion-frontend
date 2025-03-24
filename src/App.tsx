@@ -9,6 +9,11 @@ import Index from "./pages/Index";
 import Jobs from "./pages/Jobs";
 import JobDetail from "./pages/JobDetail";
 import NotFound from "./pages/NotFound";
+import Resources from "./pages/Resources";
+import Pricing from "./pages/Pricing";
+import Employers from "./pages/Employers";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import { useState } from "react";
 
 const App = () => {
@@ -26,6 +31,11 @@ const App = () => {
               <Route path="/" element={<Index />} />
               <Route path="/jobs" element={<Jobs />} />
               <Route path="/job/:id" element={<JobDetail />} />
+              <Route path="/resources" element={<Resources />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/employers" element={<Employers />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
