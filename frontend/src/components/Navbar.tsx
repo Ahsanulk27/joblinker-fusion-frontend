@@ -1,14 +1,15 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from './ThemeToggle';
 import { Menu, X, Briefcase } from 'lucide-react';
+import { useAuth } from '@/providers/AuthProvider';
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,16 +49,28 @@ export function Navbar() {
           <NavLinks />
           <div className="flex items-center space-x-4">
             <ThemeToggle />
-            <Link to="/login">
-              <Button variant="outline" className="font-medium px-4">
-                Log In
+            {!isAuthenticated ? (
+              <div className="flex space-x-4">
+                <Link to="/login">
+                  <Button variant="outline" className="font-medium px-4">
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/signup">
+                  <Button className="bg-brand-red hover:bg-brand-red/90 text-white font-medium px-4">
+                    Sign Up
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <Button
+                variant="ghost"
+                onClick={logout}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                Logout
               </Button>
-            </Link>
-            <Link to="/signup">
-              <Button className="bg-brand-red hover:bg-brand-red/90 text-white font-medium px-4">
-                Sign Up
-              </Button>
-            </Link>
+            )}
           </div>
         </nav>
 
@@ -83,16 +96,28 @@ export function Navbar() {
             <nav className="flex flex-col space-y-4">
               <NavLinks mobile />
               <div className="pt-4 flex flex-col space-y-3">
-                <Link to="/login">
-                  <Button variant="outline" className="w-full font-medium">
-                    Log In
+                {!isAuthenticated ? (
+                  <div className="flex space-x-4">
+                    <Link to="/login">
+                      <Button variant="outline" className="w-full font-medium">
+                        Login
+                      </Button>
+                    </Link>
+                    <Link to="/signup">
+                      <Button className="w-full bg-brand-red hover:bg-brand-red/90 text-white font-medium">
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    onClick={logout}
+                    className="w-full text-gray-500 hover:text-gray-700"
+                  >
+                    Logout
                   </Button>
-                </Link>
-                <Link to="/signup">
-                  <Button className="w-full bg-brand-red hover:bg-brand-red/90 text-white font-medium">
-                    Sign Up
-                  </Button>
-                </Link>
+                )}
               </div>
             </nav>
           </div>

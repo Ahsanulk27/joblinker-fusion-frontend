@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
@@ -9,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '../providers/AuthProvider';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,34 +17,24 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const { login } = useAuth();
   
-  const handleLogin = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Simple validation
-    if (!email || !password) {
-      toast({
-        title: "Error",
-        description: "Please fill in all fields",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    // Simulate login process
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      
-      // For demo purposes, any login is successful
+    try {
+      await login(email, password);
       toast({
-        title: "Success",
-        description: "You have successfully logged in!",
+        title: "Login successful!",
+        description: "Welcome back!",
       });
-      
-      // Redirect to jobs page after successful login
-      navigate('/jobs');
-    }, 1500);
+      navigate('/');
+    } catch (err) {
+      setError('Login failed. Please check your credentials and try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   return (
@@ -61,7 +51,12 @@ const Login = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleLogin} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {error && (
+                  <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <span className="block sm:inline">{error}</span>
+                  </div>
+                )}
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input 

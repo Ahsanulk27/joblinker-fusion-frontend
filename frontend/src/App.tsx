@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import Index from "./pages/Index";
 import Jobs from "./pages/Jobs";
@@ -15,6 +15,8 @@ import Employers from "./pages/Employers";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { useState } from "react";
+import { AuthProvider, useAuth } from './providers/AuthProvider';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
 
 const App = () => {
   // Create a client instance in the component
@@ -26,20 +28,35 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/jobs" element={<Jobs />} />
-              <Route path="/job/:id" element={<JobDetail />} />
-              <Route path="/resources" element={<Resources />} />
-              <Route path="/pricing" element={<Pricing />} />
-              <Route path="/employers" element={<Employers />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+          <AuthProvider>
+            <Router>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route
+                  path="/jobs"
+                  element={
+                    <ProtectedRoute allowedRoles={['candidate']}>
+                      <Jobs />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/employers"
+                  element={
+                    <ProtectedRoute allowedRoles={['employer']}>
+                      <Employers />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/job/:id" element={<JobDetail />} />
+                <Route path="/resources" element={<Resources />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Router>
+          </AuthProvider>
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
@@ -7,65 +6,38 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { EyeIcon, EyeOffIcon, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '../providers/AuthProvider';
 
 const Signup = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [fullName, setFullName] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [accountType, setAccountType] = useState<'jobseeker' | 'employer'>('jobseeker');
+  const [role, setRole] = useState<'candidate' | 'employer'>('candidate');
+  const [error, setError] = useState('');
+  const { register } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Simple validation
-    if (!fullName || !email || !password || !confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Please fill in all fields",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (password !== confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Passwords do not match",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (password.length < 8) {
-      toast({
-        title: "Error",
-        description: "Password must be at least 8 characters long",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    // Simulate signup process
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      
-      // For demo purposes, any signup is successful
+    try {
+      await register(name, email, password, role);
       toast({
-        title: "Success",
-        description: "Your account has been created successfully!",
+        title: "Registration successful!",
+        description: "Please login to continue.",
       });
-      
-      // Redirect to jobs page after successful signup
-      navigate('/jobs');
-    }, 1500);
+      navigate('/login');
+    } catch (err) {
+      setError('Registration failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   // Check password strength
@@ -103,34 +75,19 @@ const Signup = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSignup} className="space-y-4">
-                {/* Account Type Selection */}
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <Button
-                    type="button"
-                    variant={accountType === 'jobseeker' ? 'default' : 'outline'}
-                    className={accountType === 'jobseeker' ? 'bg-brand-red hover:bg-brand-red/90' : ''}
-                    onClick={() => setAccountType('jobseeker')}
-                  >
-                    Job Seeker
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={accountType === 'employer' ? 'default' : 'outline'}
-                    className={accountType === 'employer' ? 'bg-brand-red hover:bg-brand-red/90' : ''}
-                    onClick={() => setAccountType('employer')}
-                  >
-                    Employer
-                  </Button>
-                </div>
-                
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {error && (
+                  <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <span className="block sm:inline">{error}</span>
+                  </div>
+                )}
                 <div className="space-y-2">
-                  <Label htmlFor="fullName">Full Name</Label>
+                  <Label htmlFor="name">Full Name</Label>
                   <Input 
-                    id="fullName" 
+                    id="name" 
                     placeholder="John Doe" 
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                   />
                 </div>
@@ -214,27 +171,16 @@ const Signup = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <Input 
-                    id="confirmPassword" 
-                    type="password" 
-                    placeholder="Confirm your password" 
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                  />
-                  {password && confirmPassword && (
-                    password === confirmPassword ? (
-                      <div className="text-xs text-green-500 flex items-center mt-1">
-                        <Check className="h-3 w-3 mr-1" />
-                        Passwords match
-                      </div>
-                    ) : (
-                      <div className="text-xs text-red-500 flex items-center mt-1">
-                        Passwords do not match
-                      </div>
-                    )
-                  )}
+                  <Label htmlFor="role">Create account as</Label>
+                  <Select value={role} onValueChange={(value) => setRole(value as 'candidate' | 'employer')}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Create account as" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="candidate">Job Seeker</SelectItem>
+                      <SelectItem value="employer">Employer</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 
                 <Button 
