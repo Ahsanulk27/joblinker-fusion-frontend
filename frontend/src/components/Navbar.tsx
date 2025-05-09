@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { ThemeToggle } from './ThemeToggle';
-import { Menu, X, Briefcase } from 'lucide-react';
-import { useAuth } from '@/providers/AuthProvider';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "./ThemeToggle";
+import { Menu, X, Briefcase } from "lucide-react";
+import { useAuth } from "@/providers/AuthProvider";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -16,8 +16,8 @@ export function Navbar() {
       setIsScrolled(window.scrollY > 10);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Close mobile menu when changing routes
@@ -29,15 +29,12 @@ export function Navbar() {
     <header
       className={`fixed w-full top-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/80 dark:bg-brand-purple/80 backdrop-blur-md py-2 shadow-md'
-          : 'bg-transparent py-4'
+          ? "bg-white/80 dark:bg-brand-purple/80 backdrop-blur-md py-2 shadow-md"
+          : "bg-transparent py-4"
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
-        <Link 
-          to="/" 
-          className="flex items-center space-x-2 text-2xl font-bold"
-        >
+        <Link to="/" className="flex items-center space-x-2 text-2xl font-bold">
           <Briefcase className="h-8 w-8 text-brand-red" />
           <span className="bg-gradient-to-r from-brand-red to-brand-tangerine bg-clip-text text-transparent">
             JobLinker
@@ -84,7 +81,11 @@ export function Navbar() {
             aria-label="Toggle menu"
             className="text-foreground"
           >
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isMobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
           </Button>
         </div>
       </div>
@@ -128,11 +129,15 @@ export function Navbar() {
 }
 
 const NavLinks = ({ mobile = false }: { mobile?: boolean }) => {
+  const { isAuthenticated } = useAuth();
+
   const links = [
-    { name: 'Find Jobs', path: '/jobs' },
-    { name: 'For Employers', path: '/employers' },
-    { name: 'Pricing', path: '/pricing' },
-    { name: 'Resources', path: '/resources' },
+    { name: "Find Jobs", path: "/jobs" },
+    { name: "For Employers", path: "/employers" },
+    { name: "Resources", path: "/resources" },
+    ...(isAuthenticated
+      ? [{ name: "Create Profile", path: "/profile/update" }]
+      : []),
   ];
 
   return (
@@ -142,7 +147,7 @@ const NavLinks = ({ mobile = false }: { mobile?: boolean }) => {
           key={link.name}
           to={link.path}
           className={`font-medium transition-colors duration-300 hover:text-brand-red ${
-            mobile ? 'text-lg py-2' : ''
+            mobile ? "text-lg py-2" : ""
           }`}
         >
           {link.name}

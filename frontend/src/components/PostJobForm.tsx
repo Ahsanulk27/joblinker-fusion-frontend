@@ -52,7 +52,7 @@ export function PostJobForm({ onSuccess }: { onSuccess?: () => void }) {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    // In a real app, this would send data to an API
+   
     console.log("Job posting form submitted:", values);
     
     // Show success message
